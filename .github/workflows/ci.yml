@@ -24,6 +24,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Set Gradle Wrapper permissions
+        run: chmod +x ./gradlew
+
       - name: Run build
         run: ./gradlew build buildLambdaRelease --stacktrace
 
