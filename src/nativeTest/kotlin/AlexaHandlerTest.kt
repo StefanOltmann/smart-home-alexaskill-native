@@ -42,7 +42,7 @@ class AlexaHandlerTest {
      *
      * This way we can easily just compare JSON input and output.
      */
-    private val handler = AlexaHandler().apply { unitTesting = true }
+    private val handler = AlexaHandler.apply { unitTesting = true }
 
     /**
      * A namespace not handled by this skill should result in a proper error response.

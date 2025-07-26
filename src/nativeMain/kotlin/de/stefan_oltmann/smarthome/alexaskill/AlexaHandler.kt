@@ -40,11 +40,26 @@ import kotlin.uuid.Uuid
 
 /**
  * The main class handling all the logic.
- *
- * Attention: This must be a class (and cannot be an object) because the AWS Lambda
- * will create an instance of it before calling the handleRequest() method.
  */
-class AlexaHandler : LambdaBufferedHandler<String, String> {
+object AlexaHandler : LambdaBufferedHandler<String, String> {
+
+    /**
+     * Likely your name if these are your devices.
+     * Must not be empty.
+     */
+    const val MANUFACTURER_NAME = "Smart Home"
+
+    /**
+     * A placeholder description for the devices.
+     * Must not be empty.
+     */
+    const val DEVICE_DESCRIPTION = "-"
+
+    /**
+     * Constants for the Unit Test fake messages
+     */
+    const val UNIT_TEST_MESSAGE_ID = "MESSAGE_ID"
+    const val UNIT_TEST_TIMESTAMP = "2020-01-01T13:37:00.000Z"
 
     /**
      * Modifies behavior to help us with unit tests.
@@ -61,6 +76,16 @@ class AlexaHandler : LambdaBufferedHandler<String, String> {
         ignoreUnknownKeys = true
     }
 
+    /* For e.g. "https://myserver.com:50000/" (without quotes) */
+    @OptIn(ExperimentalForeignApi::class)
+    private val apiUrl = getenv("API_URL")?.toKString() ?: error("API_URL not set.")
+
+    /* This code is sent to the backend for authorization. */
+    @OptIn(ExperimentalForeignApi::class)
+    private val authCode = getenv("AUTH_CODE")?.toKString() ?: error("AUTH_CODE not set.")
+
+    private val restApi = RestApiClientFactory.createRestApiClient(apiUrl, authCode)
+
     /**
      * This method is called by the AWS Lambda.
      *
@@ -73,14 +98,6 @@ class AlexaHandler : LambdaBufferedHandler<String, String> {
         input: String,
         context: io.github.trueangle.knative.lambda.runtime.api.Context
     ): String {
-
-        /* For e.g. "https://myserver.com:50000/" (without quotes) */
-        val apiUrl = getenv("API_URL")?.toKString() ?: error("API_URL not set.")
-
-        /* This code is sent to the backend for authorization. */
-        val authCode = getenv("AUTH_CODE")?.toKString() ?: error("AUTH_CODE not set.")
-
-        val restApi = RestApiClientFactory.createRestApiClient(apiUrl, authCode)
 
         Log.info("Request: $input")
 
@@ -238,15 +255,16 @@ class AlexaHandler : LambdaBufferedHandler<String, String> {
         )
 
         /*
-         * An "endpoint" is a device. For example the light you want to turn off and on is a "endpoint".
+         * An "endpoint" is a device. For example the light you want
+         * to turn off and on is an "endpoint".
          */
         val endpoints = mutableListOf<DiscoveryEndpoint>()
 
         devices.forEach { device ->
 
             /*
-                 * Devices can have many capabilities and you can mix them like you need it.
-                 */
+             * Devices can have many capabilities, and you can mix them like you need it.
+             */
             val capabilities = mutableListOf<Capability>()
 
             for (capability in device.capabilities) {
@@ -413,10 +431,6 @@ class AlexaHandler : LambdaBufferedHandler<String, String> {
         )
     }
 
-    /*
-     * Methods to communicate with backend API
-     */
-
     /**
      * Calls the backend API to set the power state of a specified endpoint.
      */
@@ -522,26 +536,5 @@ class AlexaHandler : LambdaBufferedHandler<String, String> {
             return UNIT_TEST_TIMESTAMP
 
         return Clock.System.now().toString()
-    }
-
-    companion object {
-
-        /**
-         * Likely your name if these are your devices.
-         * Must not be empty.
-         */
-        const val MANUFACTURER_NAME = "Smart Home"
-
-        /**
-         * A placeholder description for the devices.
-         * Must not be empty.
-         */
-        const val DEVICE_DESCRIPTION = "-"
-
-        /**
-         * Constants for the Unit Test fake messages
-         */
-        const val UNIT_TEST_MESSAGE_ID = "MESSAGE_ID"
-        const val UNIT_TEST_TIMESTAMP = "2020-01-01T13:37:00.000Z"
     }
 }
