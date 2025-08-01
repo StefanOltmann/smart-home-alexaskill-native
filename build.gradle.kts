@@ -61,5 +61,5 @@ kotlin {
 }
 
 buildLambdaRelease {
-    architecture.set(Architecture.LINUX_X64)
+    architecture.set(Architecture.LINUX_ARM64)
 }
