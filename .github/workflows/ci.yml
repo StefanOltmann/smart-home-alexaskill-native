@@ -16,11 +16,6 @@ jobs:
           distribution: 'corretto'
           java-version: '21'
 
-      - name: Install libcurl
-        run: |
-          sudo apt-get update
-          sudo apt-get install libcurl3-dev
-
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
