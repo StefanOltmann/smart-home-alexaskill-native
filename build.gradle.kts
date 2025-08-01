@@ -30,7 +30,7 @@ repositories {
 kotlin {
 
     listOf(
-        linuxX64()
+        linuxArm64()
     ).forEach {
         it.binaries {
             executable {
