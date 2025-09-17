@@ -1,7 +1,8 @@
 # Stefan's Smart Home Alexa Skill (Kotlin/Native)
 
-[![Kotlin](https://img.shields.io/badge/Kotlin-2.2.0-blue.svg?style=flat&logo=kotlin)](https://kotlinlang.org)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+![Kotlin](https://img.shields.io/badge/kotlin-2.2.0-blue.svg?logo=kotlin)
+[![License: AGPL v3](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![GitHub Sponsors](https://img.shields.io/badge/Sponsor-gray?&logo=GitHub-Sponsors&logoColor=EA4AAA)](https://github.com/sponsors/StefanOltmann)
 
 This is a test for [Kotlin Native Runtime for AWS Lambda](https://github.com/trueangle/kotlin-native-aws-lambda-runtime).
 
